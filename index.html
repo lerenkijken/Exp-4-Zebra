@@ -19,7 +19,7 @@
   <script src="https://unpkg.com/@jspsych/plugin-survey-text@2.1.0"></script>
 
   <link href="https://unpkg.com/jspsych@8.2.2/css/jspsych.css" rel="stylesheet" type="text/css" />
-  <link href="umu_exp_style.css" rel="stylesheet" type="text/css" />
+  <link href="exp_4_style.css" rel="stylesheet" type="text/css" />
 
 </head>
 <body oncontextmenu='return false;'></body>
@@ -39,109 +39,109 @@
 
 /////////////////
 
-  function getContinueButton() {
-    return document.querySelector(
-      'button.jspsych-btn:not([disabled]), input.jspsych-btn[type="button"]:not([disabled]), input.jspsych-btn[type="submit"]:not([disabled]), input[type="submit"]:not([disabled])'
-    );
-  }
+  // function getContinueButton() {
+  //   return document.querySelector(
+  //     'button.jspsych-btn:not([disabled]), input.jspsych-btn[type="button"]:not([disabled]), input.jspsych-btn[type="submit"]:not([disabled]), input[type="submit"]:not([disabled])'
+  //   );
+  // }
 
-  document.addEventListener('keydown', function(event) {
-    const active_element = document.activeElement;
-    const active_tag = active_element ? active_element.tagName : '';
-    const input_type = active_element && active_element.type ? active_element.type.toLowerCase() : '';
-    const blocks_space_continue =
-      active_tag === 'TEXTAREA' ||
-      active_tag === 'SELECT' ||
-      active_tag === 'BUTTON' ||
-      (active_tag === 'INPUT' && !['radio', 'checkbox'].includes(input_type));
-    const continue_button = getContinueButton();
+  // document.addEventListener('keydown', function(event) {
+  //   const active_element = document.activeElement;
+  //   const active_tag = active_element ? active_element.tagName : '';
+  //   const input_type = active_element && active_element.type ? active_element.type.toLowerCase() : '';
+  //   const blocks_space_continue =
+  //     active_tag === 'TEXTAREA' ||
+  //     active_tag === 'SELECT' ||
+  //     active_tag === 'BUTTON' ||
+  //     (active_tag === 'INPUT' && !['radio', 'checkbox'].includes(input_type));
+  //   const continue_button = getContinueButton();
 
-    if (event.code === 'Space' && continue_button && !blocks_space_continue) {
-      event.preventDefault();
-      continue_button.click();
-    }
-  });
+  //   if (event.code === 'Space' && continue_button && !blocks_space_continue) {
+  //     event.preventDefault();
+  //     continue_button.click();
+  //   }
+  // });
 
-  function isSpaceHintTarget(element) {
-    return element.matches(
-      'button.jspsych-btn, input.jspsych-btn[type="button"], input.jspsych-btn[type="submit"], input[type="submit"]'
-    );
-  }
+  // function isSpaceHintTarget(element) {
+  //   return element.matches(
+  //     'button.jspsych-btn, input.jspsych-btn[type="button"], input.jspsych-btn[type="submit"], input[type="submit"]'
+  //   );
+  // }
 
-  function ensureSpaceHints() {
-    const buttons = document.querySelectorAll(
-      'button.jspsych-btn, input.jspsych-btn[type="button"], input.jspsych-btn[type="submit"], input[type="submit"]'
-    );
+  // function ensureSpaceHints() {
+  //   const buttons = document.querySelectorAll(
+  //     'button.jspsych-btn, input.jspsych-btn[type="button"], input.jspsych-btn[type="submit"], input[type="submit"]'
+  //   );
 
-    buttons.forEach((button) => {
-      if (
-        button.parentElement &&
-        button.parentElement.classList.contains('jspsych-space-wrapper')
-      ) {
-        const existing_hint = button.parentElement.querySelector('.jspsych-space-hint');
-        if (!existing_hint) {
-          const hint = document.createElement('div');
-          hint.className = 'jspsych-space-hint';
-          hint.textContent = 'Klik hierboven of druk op <spatie>';
-          button.parentElement.appendChild(hint);
-        }
-        return;
-      }
+  //   buttons.forEach((button) => {
+  //     if (
+  //       button.parentElement &&
+  //       button.parentElement.classList.contains('jspsych-space-wrapper')
+  //     ) {
+  //       const existing_hint = button.parentElement.querySelector('.jspsych-space-hint');
+  //       if (!existing_hint) {
+  //         const hint = document.createElement('div');
+  //         hint.className = 'jspsych-space-hint';
+  //         hint.textContent = 'Klik hierboven of druk op <spatie>';
+  //         button.parentElement.appendChild(hint);
+  //       }
+  //       return;
+  //     }
 
-      const wrapper = document.createElement('div');
-      wrapper.className = 'jspsych-space-wrapper';
-      button.insertAdjacentElement('beforebegin', wrapper);
-      wrapper.appendChild(button);
+  //     const wrapper = document.createElement('div');
+  //     wrapper.className = 'jspsych-space-wrapper';
+  //     button.insertAdjacentElement('beforebegin', wrapper);
+  //     wrapper.appendChild(button);
 
-      const hint = document.createElement('div');
-      hint.className = 'jspsych-space-hint';
-      hint.textContent = 'Klik hierboven of druk op <spatie>';
-      wrapper.appendChild(hint);
-    });
-  }
+  //     const hint = document.createElement('div');
+  //     hint.className = 'jspsych-space-hint';
+  //     hint.textContent = 'Klik hierboven of druk op <spatie>';
+  //     wrapper.appendChild(hint);
+  //   });
+  // }
 
-  function setupSpaceHintObserver() {
-    let update_scheduled = false;
+  // function setupSpaceHintObserver() {
+  //   let update_scheduled = false;
 
-    const scheduleHintUpdate = () => {
-      if (update_scheduled) return;
-      update_scheduled = true;
-      window.requestAnimationFrame(() => {
-        update_scheduled = false;
-        ensureSpaceHints();
-      });
-    };
+  //   const scheduleHintUpdate = () => {
+  //     if (update_scheduled) return;
+  //     update_scheduled = true;
+  //     window.requestAnimationFrame(() => {
+  //       update_scheduled = false;
+  //       ensureSpaceHints();
+  //     });
+  //   };
 
-    const observer = new MutationObserver((mutation_list) => {
-      const should_update = mutation_list.some((mutation) => {
-        return [...mutation.addedNodes].some((node) => {
-          if (!(node instanceof HTMLElement)) return false;
-          if (node.classList.contains('jspsych-space-hint')) return false;
-          if (node.classList.contains('jspsych-space-wrapper')) return false;
-          return isSpaceHintTarget(node) || !!node.querySelector?.(
-            'button.jspsych-btn, input.jspsych-btn[type="button"], input.jspsych-btn[type="submit"], input[type="submit"]'
-          );
-        });
-      });
+  //   const observer = new MutationObserver((mutation_list) => {
+  //     const should_update = mutation_list.some((mutation) => {
+  //       return [...mutation.addedNodes].some((node) => {
+  //         if (!(node instanceof HTMLElement)) return false;
+  //         if (node.classList.contains('jspsych-space-hint')) return false;
+  //         if (node.classList.contains('jspsych-space-wrapper')) return false;
+  //         return isSpaceHintTarget(node) || !!node.querySelector?.(
+  //           'button.jspsych-btn, input.jspsych-btn[type="button"], input.jspsych-btn[type="submit"], input[type="submit"]'
+  //         );
+  //       });
+  //     });
 
-      if (should_update) {
-        scheduleHintUpdate();
-      }
-    });
+  //     if (should_update) {
+  //       scheduleHintUpdate();
+  //     }
+  //   });
 
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
+  //   observer.observe(document.body, {
+  //     childList: true,
+  //     subtree: true
+  //   });
 
-    scheduleHintUpdate();
-  }
+  //   scheduleHintUpdate();
+  // }
 
-  if (document.readyState === 'loading') {
-    window.addEventListener('DOMContentLoaded', setupSpaceHintObserver);
-  } else {
-    setupSpaceHintObserver();
-  }
+  // if (document.readyState === 'loading') {
+  //   window.addEventListener('DOMContentLoaded', setupSpaceHintObserver);
+  // } else {
+  //   setupSpaceHintObserver();
+  // }
 
 
 ///////////////////////////////////////////////
@@ -193,7 +193,6 @@ document.addEventListener("keydown", save_incomplete_data)
   const vividness_imagery_condition = jsPsych.randomization.sampleWithoutReplacement(['right', 'left'], 1)[0];
   const hidden_stimulus_congruency = jsPsych.randomization.sampleWithoutReplacement(['congruent', 'incongruent', 'absent'], 1)[0];
 
-  const practice_gabors = jsPsych.randomization.shuffle(['right', 'left', 'absent'])
 
 
   let dynamic_noise_duration = 3000;
@@ -203,7 +202,7 @@ document.addEventListener("keydown", save_incomplete_data)
 
   let main_task_start_time = null;
   let running_trial_number = 0;
-  let current_external_condition = null;
+  let external_condition = null;
 
   let running_score = 0
 
@@ -212,7 +211,20 @@ document.addEventListener("keydown", save_incomplete_data)
   let opacity_boost = 0.4
 
   const break_every_n_trials = 10
+
   const n_practice_trials = 3
+  const trials_per_condition = 20
+  
+  const practice_gabors = jsPsych.randomization.shuffle(['right', 'left', 'absent'])
+  const main_task_gabors = jsPsych.randomization.repeat(['right', 'left', 'absent'], trials_per_condition)
+  
+  const practice_and_main_gabors = [ 
+    ...practice_gabors,
+    ...main_task_gabors
+  ]
+
+  const total_main_trials = practice_and_main_gabors.length
+
 
   let delta_times;
 
@@ -299,15 +311,20 @@ document.addEventListener("keydown", save_incomplete_data)
     return gabor;
   }
 
+
+  const button_left_html = `<img src="imgs/gabor_left_sand.png" style="width:75px"></img>`
+  const button_absent_html =  `<img src="imgs/sand_circle.png" style="width:75px"></img>`
+  const button_right_html = `<img src="imgs/gabor_right_sand.png" style="width:75px"></img>`
+
   const preload = {
     type: jsPsychPreload,
     images: [...noise_files, 
     'imgs/Lieke.png','imgs/Rick.png',
-    'imgs/gabor_left.png', 'imgs/gabor_right.png', 
+    'imgs/gabor_left.png', 'imgs/gabor_right.png',  "imgs/sand_circle.png",
     'imgs/gabor_left_sand.png', 'imgs/gabor_right_sand.png',
     'imgs/sandstorm.png', 'imgs/noise_sandstorm.png', 'imgs/sandstorm_intro.png',
     'imgs/left_key.png', 'imgs/right_key.png',  'imgs/up_down_key.png',    
-    'imgs/key_gabor_coupling.png'
+    'imgs/key_gabor_coupling.png',
    ],
    
     save_trial_parameters: {
@@ -833,7 +850,8 @@ document.addEventListener("keydown", save_incomplete_data)
   }
 
   function get_congruency(imagery_condition, external_condition) {
-    if (external_condition === 'absent') return 'absent_external';
+    if (external_condition === 'no_response') return 'no_response';
+    if (external_condition === 'absent') return 'absent';
     if (imagery_condition === external_condition) return 'congruent';
     return 'incongruent';
   }
@@ -893,9 +911,9 @@ document.addEventListener("keydown", save_incomplete_data)
     })
     
 
-
+// `<img src="imgs/gabor_left_sand.png" style="width:75px"></img>`
     return {
-      type: jsPsychCanvasKeyboardResponse,
+      type: jsPsychCanvasButtonResponse,
       canvas_size: canvas_size,
       trial_duration: () => (running_trial_number <= n_practice_trials ? null :  noise_duration), // if trial number is 1 or 2 give unlimited time for response
       save_trial_parameters: {
@@ -903,27 +921,16 @@ document.addEventListener("keydown", save_incomplete_data)
         choices: false,
         canvas_size: false
       },
-      prompt: () => {
-        if(running_trial_number <= n_practice_trials ) {
-           return `<img src="imgs/key_gabor_coupling.png" style="width:400px"></img>` 
-       
-        } else {
-          return null
-        }
-      },
+      choices: [button_left_html, button_absent_html, button_right_html],
+      // button_html: (choice) => {`<img src="${choice}"></img>`},
       stimulus: function() {
 
-        let external_condition;
-
-        // ensure first 3 practice trials incluce all options
-        if (running_trial_number <= n_practice_trials) {
-          external_condition = practice_gabors[running_trial_number-1]
-        } else {
-           external_condition  = current_external_condition; 
-        }
         
 
-        // boost opacity every 13 trials
+        // ensure first 3 practice trials incluce all options (then an equal number of each gabor, but shuffled)
+        external_condition = practice_and_main_gabors[running_trial_number-1]
+
+        // boost opacity every 13 presnt-trials
         let n_left_trials = jsPsych.data.get().filter({phase: "main_trial", external_condition :'left'}).count()
         let n_right_trials = jsPsych.data.get().filter({phase: "main_trial", external_condition :'right'}).count()
         let n_present_trials = n_left_trials + n_right_trials + 1
@@ -1014,7 +1021,7 @@ document.addEventListener("keydown", save_incomplete_data)
           timestamp = performance.now();
         }, single_frame_duration);
       },
-      choices: ['ArrowLeft', 'ArrowDown', 'ArrowUp', 'ArrowRight'],
+
       response_ends_trial: true,
       data: function() {
         
@@ -1022,10 +1029,10 @@ document.addEventListener("keydown", save_incomplete_data)
           phase: 'main_trial',
           trial_number: running_trial_number,
           imagery_condition: imagery_condition,
-          external_condition: current_external_condition,
-          gabor_opacity: current_external_condition === 'absent' ? 0 : gabor_opacity,
-          correct_response: get_correct_response_label(current_external_condition),
-          congruency: get_congruency(imagery_condition, current_external_condition),
+          external_condition: external_condition,
+          gabor_opacity: external_condition === 'absent' ? 0 : gabor_opacity,
+          correct_response: external_condition,
+          stim_congruency: get_congruency(imagery_condition, external_condition),
           noise_duration: noise_duration,
           single_frame_duration: single_frame_duration
         };
@@ -1037,6 +1044,7 @@ document.addEventListener("keydown", save_incomplete_data)
         data.n_recorded_frames = delta_times.length;
         data.response_label = key_to_response(data.response);
         data.correct = data.response_label === data.correct_response ? 1 : 0;
+        data.resp_congruency = get_congruency(imagery_condition, data.response_label),
         data.elapsed_main_task_time_ms = Math.round(performance.now() - main_task_start_time);
 
         running_score += (running_trial_number > n_practice_trials ?  get_score(data.correct, data.rt) : 0) // set 
@@ -1158,7 +1166,7 @@ document.addEventListener("keydown", save_incomplete_data)
           Jij blijft nog steeds de strepen van <strong>${zebraName(global_imagery_condition)} inbeelden </strong>: <img src='imgs/gabor_${global_imagery_condition}_sand.png'; width=65; style="vertical-align: middle"> </img>
         </p>
         <p>
-          Maar nu kan er soms ook <strong>echt een zebra</strong> in de zandstorm staan:je ziet dan de strepen van ${zebraName(global_imagery_condition)} of ${zebraName(oppositeOrientation(global_imagery_condition))}.
+          Maar nu kan er soms ook <strong>echt een zebra</strong> in de zandstorm staan: je ziet dan de strepen van ${zebraName(global_imagery_condition)} of ${zebraName(oppositeOrientation(global_imagery_condition))}.
         <br>
           Laten we kort 3 voorbeelden doornemen.
         </p>
@@ -1173,7 +1181,7 @@ document.addEventListener("keydown", save_incomplete_data)
   };
 
   const example_left_screen = {
-    type: jsPsychHtmlKeyboardResponse,
+    type: jsPsychHtmlButtonResponse,
     stimulus: `
       <div style="max-width:900px; margin:0 auto; text-align:center;">
         <p style="font-size:24px;"><strong>Voorbeeld 1/3</strong></p>
@@ -1202,16 +1210,12 @@ document.addEventListener("keydown", save_incomplete_data)
          <img src="imgs/left_key.png" style="width:160px;"></img>
       </div>
     `,
-    choices: ['ArrowLeft'],
-    save_trial_parameters: {
-      stimulus: false,
-      choices: false
-    },
+    choices: [button_left_html],
     data: { phase: 'orientation_example_left' }
   };
 
   const example_right_screen = {
-    type: jsPsychHtmlKeyboardResponse,
+    type: jsPsychHtmlButtonResponse,
     stimulus: `
       <div style="max-width:900px; margin:0 auto; text-align:center;">
         <p style="font-size:24px;"><strong>Voorbeeld 2/3</strong></p>
@@ -1239,16 +1243,12 @@ document.addEventListener("keydown", save_incomplete_data)
         <img src="imgs/right_key.png" style="width:160px;"></img>
       </div>
     `,
-    choices: ['ArrowRight'],
-    save_trial_parameters: {
-      stimulus: false,
-      choices: false
-    },
+    choices: [button_right_html],
     data: { phase: 'orientation_example_right' }
   };
 
   const example_absent_screen = {
-    type: jsPsychHtmlKeyboardResponse,
+    type: jsPsychHtmlButtonResponse,
     stimulus: `
       <div style="max-width:900px; margin:0 auto; text-align:center;">
         <h2><strong>Voorbeeld 3/3</strong></h2>
@@ -1264,11 +1264,7 @@ document.addEventListener("keydown", save_incomplete_data)
         <img src="imgs/up_down_key.png" style="width:160px;"></img>
       </div>
     `,
-    choices: ['ArrowUp', 'ArrowDown'],
-    save_trial_parameters: {
-      stimulus: false,
-      choices: false
-    },
+    choices: [button_absent_html],
     data: { phase: 'orientation_example_left' }
   };
 
@@ -1416,26 +1412,26 @@ document.addEventListener("keydown", save_incomplete_data)
         }
       },
 
-      {
-        type: jsPsychCallFunction,
-        func: function() {
-          current_external_condition = sample_external_condition();
-        },
-        save_trial_parameters: {  func: false   },
-        data: function() {
-          return {
-            phase: 'sample_external_condition',
-            trial_number: running_trial_number,
-            sampled_external_condition: current_external_condition
-          };
-        }
-      },
+      // {
+      //   type: jsPsychCallFunction,
+      //   func: function() {
+      //     current_external_condition = sample_external_condition();
+      //   },
+      //   save_trial_parameters: {  func: false   },
+      //   data: function() {
+      //     return {
+      //       phase: 'sample_external_condition',
+      //       trial_number: running_trial_number,
+      //       sampled_external_condition: current_external_condition
+      //     };
+      //   }
+      // },
 
 
 
       make_dynamic_trial(
         global_imagery_condition,
-        dynamic_noise_duration 
+        dynamic_noise_duration,
       ),
 
 
@@ -1461,18 +1457,19 @@ document.addEventListener("keydown", save_incomplete_data)
     ],
 
     loop_function: function() {
-      const elapsed = performance.now() - main_task_start_time;
-      return elapsed < total_task_duration;
+      return running_trial_number <= total_main_trials; // running trial number starts with 1 
     }
   };
 
 
 
 
+
+
 //TIMELINE 
-  const timeline = [preload,
+  const timeline = [preload, start_main, timed_main_task,
   // password_check, 
-  welcome_screen, demographics, zebra_intro, sandstorm_intro, stripes_intro];
+  welcome_screen, zebra_intro, sandstorm_intro, stripes_intro];
 
 
  
@@ -1524,16 +1521,16 @@ document.addEventListener("keydown", save_incomplete_data)
   // utility functions
 
   function get_score(accuracy, rt, allowed_time=dynamic_noise_duration) {
+    if( rt>300 ){
+      return  Math.max( 0,  Math.round(accuracy * (allowed_time - rt) * 0.1) )
+    } else {
+      return 0
+    }
     
-    return  Math.max( 0,  Math.round(accuracy * (allowed_time - rt) * 0.1) )
   }
 
 
-
-
-
-
-
+  
 
 
 
@@ -1584,6 +1581,12 @@ v 0.5.2:  (11-05-2026 12:00)
   2. added note explaining no data is saved 
   3. removed password check 
   4. reload page at exp end
+
+
+v 0.6.0:  (8-7-2026 ) FOR lerenkijken.nl
+  1. balanced trial numbers across conditions
+  2. scoring: only points when rt > 300 ms
+  3. 
 
 */
 
