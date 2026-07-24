@@ -112,7 +112,7 @@
   // add url variables
   let exp_version = '0_6_0'
   const exp_id = 'exp_4_v'+exp_version
-  console.log("Exp ID: "+exp_id)
+  console.log("Exp id: "+exp_id)
     
   
   const url_vars = jsPsych.data.urlVariables()
@@ -123,12 +123,15 @@
   url_vars['exp_start_datetime'] = Date(exp_start_datetime)
   url_vars['exp_start_UTCms'] = exp_start_datetime
 
+  url_vars['exp_version'] = exp_version
+  url_vars['exp_id'] = exp_id
+
   const user_info_trial = {
     type: jsPsychBrowserCheck,
     data: url_vars,
   };
 
-
+  let get_device_info = () => jsPsych.data.get().filter({trial_type: "browser-check"})['trials'][0]
 
   const canvas_size = [400, 400];
   const noise_imgs_dim = [250, 250];
@@ -1196,49 +1199,52 @@
     }
   };
 
-
-  const end_screen = {
-    type: jsPsychSurveyText,
-    preamble: () => `
-        <h2>Goed gedaan!</h2>
+  const debrief = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `<h2>Goed gedaan!</h2>
         <h3>Je bent klaar.</h3>
-          <h3>Dit is je eindscore:</h3>
-            <h1>${running_score}</h1>
-        
-        
-    `,
-    questions: [{prompt:
-      `<p>Als je wil, kun je hier nog iets meegeven aan de onderzoekers!</p>
-      <p>Klik daarna op de knop eronder om jouw antwoorden op te slaan!</p>
-      <p><i>Dit experiment is verlopen. Er wordt geen data meer opgeslagen.</i></p>`,
-      rows:3, placeholder:'Vond je het leuk om mee te doen? Heb je opmerkingen of ideeën? Typ het hier!',
-    }],
-    button_label: ['Opslaan en afsluiten'],
-    data: { phase: 'end_screen' },
-    on_finish: (data) => {
-      data.score = running_score
-      window.location.reload()
-      // jsPsych.data.get().localSave('csv', filename);
-    }
+        <h3>Dit is je eindscore:</h3>
+        <h1>${running_score}</h1>`,
+      grid_rows: 2,
+      choices: ["Probeer het nog eens!", "Doe een ander Experiment"] ,
+      data:{
+          label:'debrief',
+      },
+      on_finish: function(){
+          let resp_idx = jsPsych.data.get().last().select('response').values[0]
+          if (resp_idx == 0){
+              window.top.location.href = 'https://lerenkijken.nl/experiment/zoek-de-zebras'
+          }
+          if (resp_idx == 1){
+              window.top.location.href = 'https://lerenkijken.nl/#experimenten' ;
+          }
+      },
   };
 
-  const save_data_pipe = {
-      type: jsPsychPipe,
-      action: "save",
-      experiment_id: "HEqS006hoIeG",
-      filename: filename,
-      data_string: ()=>jsPsych.data.get().csv(),
-      wait_message: `<h3>Dankjewel!</h3><h3>We slaan nu je antwoorden op.</h3><h3>Je hoeft verder niets meer te doen.</h3><p>Als het opslaan gelukt is, wordt het spel automatisch klaargezet voor de volgende!</p>`, 
-      on_finish: function() {
-        window.location.reload()
-      }
-  };
+  const save_data = {
+      type: jsPsychCallFunction,
+      async: true,
+      func: function(done){
+          try {
+              window.xhr = $.post('https://www.lerenkijken.nl/api/save', jsPsych.data.get().json()).done(function(){
+                  if(xhr.status == 200){
+                      done()
+                  } else{
+                      console.log(xhr.status);
+                      done()
+                  }
+              }).fail(function(){
+                  console.log(xhr.status);
+                  done()
+              });
+          } catch (error){
+              console.error(error);
+              done()
+          }
+          
+      },
 
-
-
-
-  
-
+  }
 
 
   let info_speed_up_trial = {
@@ -1290,30 +1296,10 @@
         }
       },
 
-      // {
-      //   type: jsPsychCallFunction,
-      //   func: function() {
-      //     current_external_condition = sample_external_condition();
-      //   },
-      //   save_trial_parameters: {  func: false   },
-      //   data: function() {
-      //     return {
-      //       phase: 'sample_external_condition',
-      //       trial_number: running_trial_number,
-      //       sampled_external_condition: current_external_condition
-      //     };
-      //   }
-      // },
-
-
-
       make_dynamic_trial(
         global_imagery_condition,
         dynamic_noise_duration,
       ),
-
-
-
       
       {
         timeline: [info_speed_up_trial],
@@ -1390,7 +1376,8 @@
   timeline.push(make_global_imagery_instruction(global_imagery_condition));
   timeline.push(start_main);
   timeline.push(timed_main_task);
-  timeline.push(end_screen,); // save_data_pipe
+  timeline.push(save_data);
+  timeline.push(debrief); // save_data_pipe
 
 
 
