@@ -17,6 +17,7 @@
   <script src="https://unpkg.com/@jspsych/plugin-survey-text@2.1.0"></script>
   <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
   <script src="https://unpkg.com/@jspsych/plugin-survey-text@2.1.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-browser-check@2.1.0"></script>
 
   <link href="https://unpkg.com/jspsych@8.2.2/css/jspsych.css" rel="stylesheet" type="text/css" />
   <link href="exp_4_style.css" rel="stylesheet" type="text/css" />
@@ -25,142 +26,6 @@
 <body oncontextmenu='return false;'></body>
 
 <script>
-
-// instellingen
-
-
-///////////////////////////////////////////////
-///
-///
-///  EXTRA STUFF 
-///
-///
-///////////////////////////////////////////////
-
-/////////////////
-
-  // function getContinueButton() {
-  //   return document.querySelector(
-  //     'button.jspsych-btn:not([disabled]), input.jspsych-btn[type="button"]:not([disabled]), input.jspsych-btn[type="submit"]:not([disabled]), input[type="submit"]:not([disabled])'
-  //   );
-  // }
-
-  // document.addEventListener('keydown', function(event) {
-  //   const active_element = document.activeElement;
-  //   const active_tag = active_element ? active_element.tagName : '';
-  //   const input_type = active_element && active_element.type ? active_element.type.toLowerCase() : '';
-  //   const blocks_space_continue =
-  //     active_tag === 'TEXTAREA' ||
-  //     active_tag === 'SELECT' ||
-  //     active_tag === 'BUTTON' ||
-  //     (active_tag === 'INPUT' && !['radio', 'checkbox'].includes(input_type));
-  //   const continue_button = getContinueButton();
-
-  //   if (event.code === 'Space' && continue_button && !blocks_space_continue) {
-  //     event.preventDefault();
-  //     continue_button.click();
-  //   }
-  // });
-
-  // function isSpaceHintTarget(element) {
-  //   return element.matches(
-  //     'button.jspsych-btn, input.jspsych-btn[type="button"], input.jspsych-btn[type="submit"], input[type="submit"]'
-  //   );
-  // }
-
-  // function ensureSpaceHints() {
-  //   const buttons = document.querySelectorAll(
-  //     'button.jspsych-btn, input.jspsych-btn[type="button"], input.jspsych-btn[type="submit"], input[type="submit"]'
-  //   );
-
-  //   buttons.forEach((button) => {
-  //     if (
-  //       button.parentElement &&
-  //       button.parentElement.classList.contains('jspsych-space-wrapper')
-  //     ) {
-  //       const existing_hint = button.parentElement.querySelector('.jspsych-space-hint');
-  //       if (!existing_hint) {
-  //         const hint = document.createElement('div');
-  //         hint.className = 'jspsych-space-hint';
-  //         hint.textContent = 'Klik hierboven of druk op <spatie>';
-  //         button.parentElement.appendChild(hint);
-  //       }
-  //       return;
-  //     }
-
-  //     const wrapper = document.createElement('div');
-  //     wrapper.className = 'jspsych-space-wrapper';
-  //     button.insertAdjacentElement('beforebegin', wrapper);
-  //     wrapper.appendChild(button);
-
-  //     const hint = document.createElement('div');
-  //     hint.className = 'jspsych-space-hint';
-  //     hint.textContent = 'Klik hierboven of druk op <spatie>';
-  //     wrapper.appendChild(hint);
-  //   });
-  // }
-
-  // function setupSpaceHintObserver() {
-  //   let update_scheduled = false;
-
-  //   const scheduleHintUpdate = () => {
-  //     if (update_scheduled) return;
-  //     update_scheduled = true;
-  //     window.requestAnimationFrame(() => {
-  //       update_scheduled = false;
-  //       ensureSpaceHints();
-  //     });
-  //   };
-
-  //   const observer = new MutationObserver((mutation_list) => {
-  //     const should_update = mutation_list.some((mutation) => {
-  //       return [...mutation.addedNodes].some((node) => {
-  //         if (!(node instanceof HTMLElement)) return false;
-  //         if (node.classList.contains('jspsych-space-hint')) return false;
-  //         if (node.classList.contains('jspsych-space-wrapper')) return false;
-  //         return isSpaceHintTarget(node) || !!node.querySelector?.(
-  //           'button.jspsych-btn, input.jspsych-btn[type="button"], input.jspsych-btn[type="submit"], input[type="submit"]'
-  //         );
-  //       });
-  //     });
-
-  //     if (should_update) {
-  //       scheduleHintUpdate();
-  //     }
-  //   });
-
-  //   observer.observe(document.body, {
-  //     childList: true,
-  //     subtree: true
-  //   });
-
-  //   scheduleHintUpdate();
-  // }
-
-  // if (document.readyState === 'loading') {
-  //   window.addEventListener('DOMContentLoaded', setupSpaceHintObserver);
-  // } else {
-  //   setupSpaceHintObserver();
-  // }
-
-
-///////////////////////////////////////////////
-///  Add halfway save functionality
-
-// press Crtl + Shift + s to save current data and reload
-
-function save_incomplete_data(e){
-  let k = e.key.toLowerCase()
-  if (k == 'q' && e.ctrlKey) {
-    let _filename = 'MANUAL_SAVE_' + Date.now() + '_' + filename
-
-    jsPsych.data.get().localSave('csv',  _filename);    
-    jsPsychPipe.saveData("HEqS006hoIeG", _filename, jsPsych.data.get().csv())
-
-  }
-}
-document.addEventListener("keydown", save_incomplete_data)
-
 
 
 ///////////////////////////////////////////////
@@ -173,7 +38,12 @@ document.addEventListener("keydown", save_incomplete_data)
 
 
   const jsPsych = initJsPsych({
-
+        // show_progress_bar: true,
+        message_progress_bar: '',
+        on_finish: function() {
+          // jsPsych.data.displayData('json');
+          // window.location.href = 'https://lerenkijken.nl/';
+        }
   });
 
 
@@ -194,7 +64,6 @@ document.addEventListener("keydown", save_incomplete_data)
   const hidden_stimulus_congruency = jsPsych.randomization.sampleWithoutReplacement(['congruent', 'incongruent', 'absent'], 1)[0];
 
 
-
   let dynamic_noise_duration = 3000;
   let single_frame_duration = 100;
   let inter_trial_interval = 800;
@@ -210,9 +79,11 @@ document.addEventListener("keydown", save_incomplete_data)
   let gabor_opacity;
   let opacity_boost = 0.4
 
-  const break_every_n_trials = 10
+  const break_every_n_trials = 5
 
   const n_practice_trials = 3
+
+  // make 20 trials per cong/incong/absent condition, resulting in total of 60 detection trials 
   const trials_per_condition = 20
   
   const practice_gabors = jsPsych.randomization.shuffle(['right', 'left', 'absent'])
@@ -224,7 +95,6 @@ document.addEventListener("keydown", save_incomplete_data)
   ]
 
   const total_main_trials = practice_and_main_gabors.length
-
 
   let delta_times;
 
@@ -240,7 +110,10 @@ document.addEventListener("keydown", save_incomplete_data)
   });
   
   // add url variables
-  let exp_version = 'version - 0.5.2 - (11-05-2026 12:00)'
+  let exp_version = '0_6_0'
+  const exp_id = 'exp_4_v'+exp_version
+  console.log("Exp ID: "+exp_id)
+    
   
   const url_vars = jsPsych.data.urlVariables()
   
@@ -250,7 +123,11 @@ document.addEventListener("keydown", save_incomplete_data)
   url_vars['exp_start_datetime'] = Date(exp_start_datetime)
   url_vars['exp_start_UTCms'] = exp_start_datetime
 
-  jsPsych.data.addProperties( url_vars )
+  const user_info_trial = {
+    type: jsPsychBrowserCheck,
+    data: url_vars,
+  };
+
 
 
   const canvas_size = [400, 400];
@@ -835,10 +712,11 @@ document.addEventListener("keydown", save_incomplete_data)
 //DEEL 2
 
 
-  function key_to_response(key_press) {
-    if (key_press === 'ArrowLeft') return 'left';
-    if (key_press === 'ArrowRight') return 'right';
-    if (key_press === 'ArrowUp' || key_press === 'ArrowDown') return 'absent';
+  function key_to_response(resp_choice) {
+    if (resp_choice === 0) return 'left';
+    if (resp_choice === 1 ) return 'absent';
+    if (resp_choice === 2) return 'right';
+    
     return 'no_response';
   }
 
@@ -1467,7 +1345,7 @@ document.addEventListener("keydown", save_incomplete_data)
 
 
 //TIMELINE 
-  const timeline = [preload, start_main, timed_main_task,
+  const timeline = [user_info_trial, preload, start_main, timed_main_task,
   // password_check, 
   welcome_screen, zebra_intro, sandstorm_intro, stripes_intro];
 

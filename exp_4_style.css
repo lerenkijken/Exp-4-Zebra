@@ -36,14 +36,19 @@ html, body {
     align-items: center;
     gap: 0.2em;
     font-size: 30px;
-    border: 10px solid transparent;
+    border: 10px solid #ce7b00;
     border-radius: 16px;
     color: white;
-    background-color: #2b00c8d0;
+    background-color: #ce7b00;
     padding: 0.2em 1.2em;
+    text-shadow: 0.2em 0.2em 0.2em #222222;
     /*font-family: Malington;*/
 }
-
+.jspsych-btn:hover {
+  background-color: #ce7b00;
+  border-color: #ce7b00;
+  color: white;
+}
 .jspsych-space-hint {
   display: block;
   margin-top: 6px;
@@ -63,11 +68,7 @@ html, body {
   align-items: center;
 }
 
-.jspsych-btn:hover {
-  background-color: #2b00c8; 
-  border-color: #2b00c8;
-  color: white;
-}
+
 .jspsych-btn:disabled {
   background-color: #2b00c800;
   color: #aaaaaa00;
