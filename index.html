@@ -67,13 +67,13 @@
   const subject_id = jsPsych.randomization.randomID(12);
   const filename = `${subject_id}.csv`;
 
-  
+  const testing_mode = true  
 
   // deel 2 constants
   const vividness_single_frame_duration = 100;
   const vividness_noise_duration = 2000;
-  const hidden_stimulus_trial_index = 6;
-  const total_vividness_trials = 6;
+  const hidden_stimulus_trial_index = testing_mode ? 2 : 10;  // in testing mode 2;  in real mode 10 
+  const total_vividness_trials =  testing_mode ? 2 : 10;      // in testing mode 2;  in real mode 10 
   const hidden_stimulus_opacity = 0.15;
   const vividness_opacities = [0, 0.14, 0.28, 0.44, 0.60];
 
@@ -100,8 +100,9 @@
 
   const n_practice_trials = 3
 
-  // make 20 trials per cong/incong/absent condition, resulting in total of 60 detection trials 
-  const trials_per_condition = 15
+  // make 15 trials per cong/incong/absent condition, resulting in total of 45 detection trials 
+
+  const trials_per_condition = testing_mode ? 1 : 15;      // in testing mode 2;  in real mode 15 
   
   const practice_gabors = jsPsych.randomization.shuffle(['right', 'left', 'absent'])
   const main_task_gabors = jsPsych.randomization.repeat(['right', 'left', 'absent'], trials_per_condition)
@@ -121,6 +122,7 @@
     main_task_stimulus_opacity: target_opacity,
     global_imagined_tilt: global_imagined_tilt,
     hidden_stimulus_congruency: hidden_stimulus_congruency,
+    testing_mode: testing_mode
   });
   
   // add url variables
@@ -210,21 +212,56 @@
   const button_absent_html =  `<img src="imgs/sand_circle.png" style="width:75px"></img>`
   const button_right_html = `<img src="imgs/gabor_right_sand.png" style="width:75px"></img>`
 
-  const preload = {
-    type: jsPsychPreload,
-    images: [...noise_files, 
+  // const preload_old = {
+  //   type: jsPsychPreload,
+  //   images: [...noise_files, 
+  //   'imgs/Lieke.png','imgs/Rick.png',
+  //   'imgs/gabor_left.png', 'imgs/gabor_right.png',  "imgs/sand_circle.png",
+  //   'imgs/gabor_left_sand.png', 'imgs/gabor_right_sand.png',
+  //   'imgs/sandstorm.png', 'imgs/noise_sandstorm.png', 'imgs/sandstorm_intro.png',
+  //   'imgs/left_key.png', 'imgs/right_key.png',  'imgs/up_down_key.png',    
+  //   'imgs/key_gabor_coupling.png',
+  //  ],
+   
+  //   save_trial_parameters: {
+  //     images: false
+  //   }
+  // };
+
+  let preload_start_timestamp;
+  let preload_finish_timestamp;
+  let stims_to_preload = [...noise_files, 
     'imgs/Lieke.png','imgs/Rick.png',
     'imgs/gabor_left.png', 'imgs/gabor_right.png',  "imgs/sand_circle.png",
     'imgs/gabor_left_sand.png', 'imgs/gabor_right_sand.png',
     'imgs/sandstorm.png', 'imgs/noise_sandstorm.png', 'imgs/sandstorm_intro.png',
     'imgs/left_key.png', 'imgs/right_key.png',  'imgs/up_down_key.png',    
     'imgs/key_gabor_coupling.png',
-   ],
-   
-    save_trial_parameters: {
-      images: false
-    }
-  };
+   ]
+  
+  const preload = {
+      type: jsPsychCallFunction,
+      async: true,
+      func: function(done){
+          preload_start_timestamp = performance.now();
+          
+          jsPsych.pluginAPI.preloadImages(
+              stims_to_preload, callback_complete = () =>{
+              preload_finish_timestamp = performance.now()
+              console.log("Preloanding took "+ ((preload_finish_timestamp - preload_start_timestamp)/1000).toFixed(2) + ' seconds' )
+          }
+          )
+          done()
+      },
+  } 
+
+
+
+
+
+
+
+
 
 
 
@@ -275,39 +312,39 @@
   // =====================================================
 
 
-  const demographics = {
-    type: jsPsychSurveyHtmlForm,
-    preamble: '<h2>Eerst twee korte vragen</h2>',
-    html: `
-      <div style="max-width:500px; margin:20px auto; text-align:left;">
-        <p>
-          Hoe oud ben je?<br>
-          <input type="number" name="age" min="4" max="130" required style="padding:6px; width:120px;">
-        </p>
+  // const demographics = {
+  //   type: jsPsychSurveyHtmlForm,
+  //   preamble: '<h2>Eerst twee korte vragen</h2>',
+  //   html: `
+  //     <div style="max-width:500px; margin:20px auto; text-align:left;">
+  //       <p>
+  //         Hoe oud ben je?<br>
+  //         <input type="number" name="age" min="4" max="130" required style="padding:6px; width:120px;">
+  //       </p>
 
-        <p>
-          Wat is je geslacht?<br>
-          <label><input type="radio" name="gender" value="male" required> Jongen / man</label><br>
-          <label><input type="radio" name="gender" value="female" required> Meisje / vrouw</label><br>
-          <label><input type="radio" name="gender" value="other" required> Anders</label>
-        </p>
-      </div>
-    `,
-    button_label: "Verder",
-    save_trial_parameters: {
-      preamble: false,
-      html: false,
-      button_label: false
-    },
-    data: {
-      phase: "demographics"
-    },
-    on_finish: function(data) {
-      const response = data.response;
-      data.age = Number(response.age);
-      data.gender = response.gender;
-    }
-  };
+  //       <p>
+  //         Wat is je geslacht?<br>
+  //         <label><input type="radio" name="gender" value="male" required> Jongen / man</label><br>
+  //         <label><input type="radio" name="gender" value="female" required> Meisje / vrouw</label><br>
+  //         <label><input type="radio" name="gender" value="other" required> Anders</label>
+  //       </p>
+  //     </div>
+  //   `,
+  //   button_label: "Verder",
+  //   save_trial_parameters: {
+  //     preamble: false,
+  //     html: false,
+  //     button_label: false
+  //   },
+  //   data: {
+  //     phase: "demographics"
+  //   },
+  //   on_finish: function(data) {
+  //     const response = data.response;
+  //     data.age = Number(response.age);
+  //     data.gender = response.gender;
+  //   }
+  // };
 
 //zebraverhaal
   const zebra_intro = {
@@ -1075,7 +1112,7 @@
 
   const welcome_screen = {
     type: jsPsychFullscreen,
-    fullscreen_mode: true,
+    fullscreen_mode: false,
     delay_after:0,
     message: `<h1>Welkom!</h1> `+
         `<h2>Leuk dat je mee wilt doen.</h2>`+
@@ -1267,6 +1304,7 @@
           try {
               window.xhr = $.post('https://www.lerenkijken.nl/api/save', jsPsych.data.get().json()).done(function(){
                   if(xhr.status == 200){
+                      console.log('Data was saved!');
                       done()
                   } else{
                       console.log(xhr.status);
@@ -1281,6 +1319,18 @@
               done()
           }
           
+      },
+      on_start: function(){
+          // write summary data to the first object
+          let summary_object = {}   
+
+          
+          summary_object.score = running_score
+          summary_object.mean_rt = jsPsych.data.get().filter({phase: 'main_trial'}).select('rt').mean()
+          summary_object.mean_accuracy = jsPsych.data.get().filter({phase: 'main_trial'}).select('correct').mean()
+          
+
+          jsPsych.data.get().first(1).values()[0]['user_summary_info'] = summary_object
       },
 
   }
@@ -1369,10 +1419,7 @@
 
 
 //TIMELINE 
-  const timeline = [user_info_trial, preload, 
-  // timed_main_task,
-  // intro_part_2, example_left_screen, example_right_screen, example_absent_screen, response_instruction,
-  // password_check, 
+  const timeline = [user_info_trial, preload,
   welcome_screen, zebra_intro, sandstorm_intro, stripes_intro];
 
 
@@ -1495,6 +1542,11 @@ v 0.6.1:  (2-9-2026 15:00) FOR lerenkijken.nl
 
 v 0.6.2:  (2-9-2026 15:00) FOR lerenkijken.nl
   1. fixed progress bar updating
+  2. have 10 imagery trials (trial 10 is critical)
+  3. add testing mode
+  4. update preloading
+  5. disable fullscreen
+
 */
 
 </script>
