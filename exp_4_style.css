@@ -36,19 +36,22 @@ html, body {
     align-items: center;
     gap: 0.2em;
     font-size: 30px;
-    border: 10px solid #ce7b00;
+    border: 10px solid #00000050;
     border-radius: 16px;
     color: white;
-    background-color: #ce7b00;
+    background-color: #fe9900;
     padding: 0.2em 1.2em;
-    text-shadow: 0.2em 0.2em 0.2em #222222;
-    /*font-family: Malington;*/
+    text-shadow: 0.1em 0.1em 0.2em #222222;
+    font-family: Malington;
 }
+
 .jspsych-btn:hover {
-  background-color: #ce7b00;
-  border-color: #ce7b00;
+  background-color: #fe9900;
+  /* border-color: #ce7b00; */
+  border: 10px solid #00000018;
   color: white;
 }
+
 .jspsych-space-hint {
   display: block;
   margin-top: 6px;
@@ -97,3 +100,23 @@ progress::-webkit-progress-value {
   /* box-shadow: 1px 1px 5px 3px rgba( 255, 0, 0, 0.8 ); */
 }
 
+@font-face {
+  font-family: Malington; /* set name */
+  src: url(font_faces/Malinton-Semibold.ttf); /* url of the font */
+}
+
+@font-face {
+  font-family: Inter; /* set name */
+  src: url(font_faces/Inter_24pt-Regular.ttf); /* url of the font */
+}
+
+@font-face {
+  font-family: Inter; /* set name */
+  src: url(font_faces/Inter_24pt-Bold.ttf); /* url of the font */
+  font-weight: bold;
+}
+@font-face {
+  font-family: Inter; /* set name */
+  src: url(font_faces/Inter_24pt-Italic.ttf); /* url of the font */
+  font-style: italic;
+}
