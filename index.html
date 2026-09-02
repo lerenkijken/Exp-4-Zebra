@@ -116,9 +116,6 @@
   let delta_times;
 
   jsPsych.data.addProperties({
-    participantID: subject_id,
-    filename: filename,
-    experiment: "zebra_in_zandstorm_gecombineerd",
     vividness_hidden_stimulus_opacity: hidden_stimulus_opacity,
     main_task_duration_ms: total_task_duration,
     main_task_stimulus_opacity: target_opacity,
@@ -127,7 +124,7 @@
   });
   
   // add url variables
-  let exp_version = '0_6_0'
+  let exp_version = '0_6_2'
   const exp_id = 'exp_4_v'+exp_version
   console.log("Exp id: "+exp_id)
     
@@ -952,8 +949,49 @@
     };
   }
 
-  function make_trial_divider() {
-    return {
+
+  // let none_button_html = `<img src="imgs/gabor_left_sand.png" style="width:75px;opacity:0" ></img>`
+  // let divider_trial = {
+  //     type: jsPsychCanvasButtonResponse,
+  //     canvas_size: canvas_size,
+  //     trial_duration: inter_trial_interval,
+  //     choices: [none_button_html, none_button_html, none_button_html],
+  //     response_ends_trial: false,
+  //     stimulus: function() {
+
+        
+  //       let canvas = new fabric.StaticCanvas("jspsych-canvas-stimulus", {
+  //         backgroundColor: 'rgba(0,0,0,0)',
+  //         centeredScaling: true
+  //       });
+
+  //       let telescope_width = canvas_size[0] * 0.03
+  //       let telescope = new fabric.Circle({
+  //         radius: canvas_size[0]/ 2 - telescope_width/ 2,
+  //         top: canvas_size[0]/ 2,
+  //         left: canvas_size[0]/ 2,
+  //         originX: 'center', originY: 'center',
+  //         fill: 'rgba(0,0,0,0)',
+  //         stroke: 'k',
+  //         strokeWidth: telescope_width
+  //       });
+  //       setTimeout(()=>{
+  //         canvas.add(telescope)
+  //         canvas.renderAll();
+  //       }, 
+        
+  //       inter_trial_interval*0.25)
+
+  //     },
+      
+  //     data:{
+  //         phase: 'trial_divider',
+  //         upcoming_trial_number: running_trial_number
+  //     }
+  //   };
+    
+    
+    let divider_trial = {
       type: jsPsychHtmlKeyboardResponse,
       stimulus: "<div style='font-size:32px; text-align:center;'>+</div>",
       choices: "NO_KEYS",
@@ -969,7 +1007,12 @@
         };
       }
     };
-  }
+
+
+
+
+
+
 
   function make_main_task_reminder(imagery_condition) {
     return {
@@ -981,7 +1024,7 @@
         return `
         <div style="max-width:900px; margin:0 auto; text-align:center;">
           <h3>Goed bezig! Je bent al zo ver:</h3>
-          <progress id="time_progress_bar" value="${time_elapsed}" max="${total_task_duration}"> </progress>
+          <progress id="time_progress_bar" value="${running_trial_number}" max="${total_main_trials}"> </progress>
           <h3>En dit is je score:</h3> <h2>${running_score}</h2>
 
           <p>
@@ -1279,7 +1322,7 @@
       },
 
       {
-        timeline: [make_trial_divider()],
+        timeline: [divider_trial],
         conditional_function: function() {
           return running_trial_number > 1;
         }
@@ -1327,6 +1370,7 @@
 
 //TIMELINE 
   const timeline = [user_info_trial, preload, 
+  // timed_main_task,
   // intro_part_2, example_left_screen, example_right_screen, example_absent_screen, response_instruction,
   // password_check, 
   welcome_screen, zebra_intro, sandstorm_intro, stripes_intro];
@@ -1448,6 +1492,9 @@ v 0.6.1:  (2-9-2026 15:00) FOR lerenkijken.nl
   2. scoring: only points when rt > 300 ms
   3. Fixed wording and made mobile friendly
 
+
+v 0.6.2:  (2-9-2026 15:00) FOR lerenkijken.nl
+  1. fixed progress bar updating
 */
 
 </script>
