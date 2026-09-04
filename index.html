@@ -19,6 +19,8 @@
   <script src="https://unpkg.com/@jspsych/plugin-survey-text@2.1.0"></script>
   <script src="https://unpkg.com/@jspsych/plugin-browser-check@2.1.0"></script>
 
+  <script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
+
   <link href="https://unpkg.com/jspsych@8.2.2/css/jspsych.css" rel="stylesheet" type="text/css" />
   <link href="exp_4_style.css" rel="stylesheet" type="text/css" />
 
@@ -63,13 +65,32 @@
         }
   });
 
-
-  const subject_id = jsPsych.randomization.randomID(12);
-  const filename = `${subject_id}.csv`;
-
   const testing_mode = true  
 
-  // deel 2 constants
+
+    // add url variables
+  let exp_version = '0_7_0'
+  const exp_id = 'exp_4_v'+exp_version
+  console.log("Exp id: "+exp_id)
+    
+  
+  const url_vars = jsPsych.data.urlVariables()
+  url_vars['exp_version'] = exp_version
+  url_vars['exp_id'] = exp_id
+  
+  const exp_start_datetime = Date.now()
+  url_vars['exp_start_datetime'] = Date(exp_start_datetime)
+  url_vars['exp_start_UTCms'] = exp_start_datetime
+
+  const user_info_trial = {
+    type: jsPsychBrowserCheck,
+    data: url_vars,
+  };
+
+  let get_device_info = () => jsPsych.data.get().filter({trial_type: "browser-check"})['trials'][0]
+  
+
+  //  constants
   const vividness_single_frame_duration = 100;
   const vividness_noise_duration = 2000;
   const hidden_stimulus_trial_index = testing_mode ? 2 : 10;  // in testing mode 2;  in real mode 10 
@@ -125,29 +146,7 @@
     testing_mode: testing_mode
   });
   
-  // add url variables
-  let exp_version = '0_6_2'
-  const exp_id = 'exp_4_v'+exp_version
-  console.log("Exp id: "+exp_id)
-    
-  
-  const url_vars = jsPsych.data.urlVariables()
-  
-  url_vars['exp_version'] = exp_version
 
-  const exp_start_datetime = Date.now()
-  url_vars['exp_start_datetime'] = Date(exp_start_datetime)
-  url_vars['exp_start_UTCms'] = exp_start_datetime
-
-  url_vars['exp_version'] = exp_version
-  url_vars['exp_id'] = exp_id
-
-  const user_info_trial = {
-    type: jsPsychBrowserCheck,
-    data: url_vars,
-  };
-
-  let get_device_info = () => jsPsych.data.get().filter({trial_type: "browser-check"})['trials'][0]
 
   const canvas_size = [400, 400];
   const noise_imgs_dim = [250, 250];
@@ -1207,7 +1206,7 @@
           </div>
         </div>
            <p>
-            Als je <strong>zebra Lieke</strong> ziet met strepen naar <strong>LINKS</strong>, klik of tik je op <strong>deze knop</strong>.<br>
+            Als je <strong>zebra Rick</strong> ziet met strepen naar <strong>RECHTS</strong>, klik of tik je op <strong>deze knop</strong>.<br>
             Probeer de knop nu uit!
             </p>
         </div>
@@ -1296,12 +1295,20 @@
           }
       },
   };
+         
+
 
   const save_data = {
       type: jsPsychCallFunction,
       async: true,
       func: function(done){
-          try {
+          try { 
+            /* To save data we need these things:
+            1. make sure to have JQuery imported by this src="https://code.jquery.com/jquery-4.0.0.min.js" inside head
+            2. get URL variables to get correct uid and token
+            3. put all url vars as key:value pairs in the first trial object
+            4. t
+            */
               window.xhr = $.post('https://www.lerenkijken.nl/api/save', jsPsych.data.get().json()).done(function(){
                   if(xhr.status == 200){
                       console.log('Data was saved!');
@@ -1420,6 +1427,7 @@
 
 //TIMELINE 
   const timeline = [user_info_trial, preload,
+  intro_part_2, example_left_screen, example_right_screen, example_absent_screen, response_instruction,
   welcome_screen, zebra_intro, sandstorm_intro, stripes_intro];
 
 
@@ -1547,6 +1555,8 @@ v 0.6.2:  (2-9-2026 15:00) FOR lerenkijken.nl
   4. update preloading
   5. disable fullscreen
 
+v 0.7.0:  (3-9-2026 ) FOR lerenkijken.nl 
+  1. add jquery to fix saving functionality to website 
 */
 
 </script>
