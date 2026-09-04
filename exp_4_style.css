@@ -5,11 +5,20 @@ html, body {
   overscroll-behavior: none;
       -webkit-user-select: none; /* Safari */
             user-select: none;
+      
 }
 
 
 .jspsych-display-element {
     background-color: #7a4e17;
+}
+
+.jspsych-content {
+  position: fixed;
+  width: 80%;
+  left: 50%; 
+  top: 50%;   
+  transform: translate(-50%, -50%);
 }
 
 .jspsych-content-wrapper {
@@ -19,7 +28,6 @@ html, body {
     background-size: contain;
     color:white;
     text-shadow: 0.2em 0.2em 0.08em #222222;
-    font-size: 20px; 
     
 }
 
@@ -169,4 +177,27 @@ transform: translate(-50%, -50%);
   font-family: Inter; /* set name */
   src: url(font_faces/Inter_24pt-Italic.ttf); /* url of the font */
   font-style: italic;
+}
+
+
+p {
+  font-family: Inter; /* use font */
+       -webkit-user-select: none; /* Safari */
+            user-select: none; 
+}
+
+h1 {
+  font-family: Inter;
+    -webkit-user-select: none; /* Safari */
+            user-select: none;
+}
+h2 {
+  font-family: Inter;
+    -webkit-user-select: none; /* Safari */
+            user-select: none; 
+}
+h3 {
+  font-family: Inter;
+    -webkit-user-select: none; /* Safari */
+            user-select: none;
 }

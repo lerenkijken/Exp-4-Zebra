@@ -46,7 +46,14 @@
     Hex #fe9900
 
 */
-
+// const designWidth = 1000; // width your layout is tuned for
+// const actualWidth = document.documentElement.clientWidth;
+// const scale = actualWidth / designWidth;
+// if (scale < 1) {
+//   document.body.style.transformOrigin = 'center';
+//   document.body.style.transform = `scale(${scale})`;
+//   document.body.style.width = `${100 / scale}%`;
+// }
 ///////////////////////////////////////////////
 ///
 ///
@@ -65,11 +72,11 @@
         }
   });
 
-  const testing_mode = false  
-
+  const testing_mode = true  
 
     // add url variables
-  let exp_version = '0_7_1'
+  let exp_version = '0_7_2' 
+  exp_version += testing_mode ? '_TEST': '' 
   const exp_id = 'exp_4_v'+exp_version
   console.log("Exp id: "+exp_id)
     
@@ -85,6 +92,11 @@
   const user_info_trial = {
     type: jsPsychBrowserCheck,
     data: url_vars,
+    on_finish: function(data) {
+      if (data.mobile){
+        document.documentElement.style.zoom = "0.5";
+      }
+    }
   };
 
   let get_device_info = () => jsPsych.data.get().filter({trial_type: "browser-check"})['trials'][0]
@@ -215,9 +227,9 @@
   }
 
 
-  const button_left_html = `<img src="imgs/gabor_left_sand.png" style="width:75px"></img>`
-  const button_absent_html =  `<img src="imgs/sand_circle.png" style="width:75px"></img>`
-  const button_right_html = `<img src="imgs/gabor_right_sand.png" style="width:75px"></img>`
+  const button_left_html = `<img src="imgs/gabor_left_sand.png" style="width:3.5em"></img>`
+  const button_absent_html =  `<img src="imgs/sand_circle.png" style="width:3.5em"></img>`
+  const button_right_html = `<img src="imgs/gabor_right_sand.png" style="width:3.5em"></img>`
 
   // const preload_old = {
   //   type: jsPsychPreload,
@@ -294,22 +306,12 @@
   function zebraImageHTML(orientation, width = 220) {
     const transform = orientation === 'right' ? 'scaleX(-1)' : 'scaleX(1)';
     const alt = zebraName(orientation);
-    const height = Math.round(width * 0.85);
+    const height = Math.round(width * 0.85 /20);
     return `
       <img 
         src="imgs/Lieke.png"
-        style="height:${height}px; width:auto; max-width:90vw; transform:${transform}; margin:10px 0;"
+        style="height:${height}em; width:auto; max-width:90vw; transform:${transform}; margin:0.5em 0;"
         alt="${alt}"
-      >
-    `;
-  }
-
-  function sandstormImageHTML(width = 260) {
-    return `
-      <img 
-        src="imgs/noise_sandstorm.png"
-        style="width:${width}px; height:${width}px; margin:10px 0; border-radius:12px;"
-        alt="zandstorm"
       >
     `;
   }
@@ -483,7 +485,7 @@
     type: jsPsychHtmlButtonResponse,
     stimulus: `
       <div style="max-width:900px; margin:0 auto; text-align:center;">
-        <p style="font-size:26px;"><strong>Dit zijn de strepen die je moet inbeelden</strong></p>
+        <h3>Dit zijn de strepen die je je moet inbeelden.</h3>
         <img src="${getGaborFile(global_imagined_tilt)}" style="width:240px; height:240px; margin:12px 0;">
         <p>
           Dit plaatje laat een klein stukje van de strepen van ${zebraName(global_imagined_tilt)} zien.
@@ -651,11 +653,11 @@
         return `
         <div style="text-align:center; max-width:1000px; margin:0 auto;">
           <h2>Hoe goed "zag" je de strepen in je <i>INBEELDING?</i></h2>
-          <p>Anders gevraagd: Hoe goed lukte het "voor-je-zien" van de strepen in je hoofd op een schaal van 5?</p>`+
+          <p>Anders gevraagd: Hoe goed lukte het "voor-je-zien" van de strepen in je hoofd op een schaal van 5?<br>
+            1 = helemaal niet &nbsp;&nbsp;&nbsp;&nbsp; 5 = super goed.
+            </p>
           
-          q_html + 
-        `</div>
-      `},
+          </div>`},
       html: () =>  {
 
 
@@ -683,16 +685,16 @@
           margin:20px auto 0 auto;
         ">`
 
-        let hinted_fivepoint_labels = ['<h3>1</h3><p>(Helemaal niet)<p>', '<h3>2</h3>', '<h3>3</h3>', '<h3>4</h3>', '<h3>5</h3><p>(Super goed)<p>']
+        let hinted_fivepoint_labels = ['<h3>1</h3>', '<h3>2</h3>', '<h3>3</h3>', '<h3>4</h3>', '<h3>5</h3>']
         let fivepoint_labels = [
           '<h3 style="margin-left:1.5em;margin-right:1.5em">1</h3>', 
           '<h3 style="margin-left:1.5em;margin-right:1.5em">2</h3>', 
           '<h3 style="margin-left:1.5em;margin-right:1.5em">3</h3>', 
           '<h3 style="margin-left:1.5em;margin-right:1.5em">4</h3>', 
           '<h3 style="margin-left:1.5em;margin-right:1.5em">5</h3>']
-         
+         // 8px = 0.4 em ->>  10px == 0.5em --> 1px == 0.05em  = / 10 -> / 2
         for (let i =0; i < 5; i++) {
-          let img_div = `<div style="position:relative; width:140px; height:140px; margin-top:8px; border:6px solid #000000; border-radius:73px; overflow:hidden; background-image:url('imgs/noise_sandstorm.png'); background-size:cover;">
+          let img_div = `<div style="position:relative; height:4em; width:4em; margin-top:0.4em; border:0.3em solid #000000; border-radius:3.7em; overflow:hidden; background-image:url('imgs/noise_sandstorm.png'); background-size:cover;">
               <img src="${gabor_file}" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:${vividness_opacities[i]};">
               </div>`
 
@@ -702,7 +704,7 @@
           choices_html += `<label style="cursor:pointer; text-align:center;">
             <input type="radio" name="vividness" value="${i+1}" required>`+
               img_div+ 
-            `<div style="margin-top:8px;">${rating_labels[i]}</div>
+            `<div style="margin-top:0.4em;">${rating_labels[i]}</div>
           </label>`
         }
         choices_html += `</div>`
@@ -738,13 +740,13 @@
       </div>
     `,
     html: `
-      <div style="max-width:700px; margin:30px auto; text-align:left; font-size:18px;">
+      <div style="max-width:700px; margin:0.15em auto; text-align:left;">
         <p>
           <label>
             <input type="radio" name="noticed_real_stimulus_last_trial" value="left" required>
             Ja, er waren echte strepen naar LINKS:
           </label>
-         <img src='imgs/gabor_left_sand.png'; width=75; style="vertical-align: middle"> </img>
+         <img src='imgs/gabor_left_sand.png'; width=60; style="vertical-align: middle"> </img>
         </p> 
 
         <p>
@@ -752,7 +754,7 @@
             <input type="radio" name="noticed_real_stimulus_last_trial" value="right" required>
             Ja, er waren echte strepen naar RECHTS:
           </label>
-          <img src='imgs/gabor_right_sand.png'; width=75; style="vertical-align: middle"> </img>
+          <img src='imgs/gabor_right_sand.png'; width=60; style="vertical-align: middle"> </img>
         </p>
 
         <p>
@@ -1185,7 +1187,7 @@
     type: jsPsychHtmlButtonResponse,
     stimulus: `
       <div style="max-width:900px; margin:0 auto; text-align:center;">
-        <p style="font-size:24px;"><strong>Voorbeeld 1/3</strong></p>
+        <p"><strong>Voorbeeld 1/3</strong></p>
 
         <div style="display:flex; justify-content:center; align-items:center; gap:36px; flex-wrap:wrap; margin:16px 0;">
           <div>
@@ -1439,8 +1441,33 @@
 
 
 
-//TIMELINE 
+
+
+
+
+
+
+
+
+
+
+
+
+/* ///////////////////////////////////
+
+MAKE TIMELINE
+
+*////////////////////////////////////
+
+
   const timeline = [user_info_trial, preload, welcome_screen, 
+stripes_intro,
+//testing zone
+ timed_main_task,
+make_vividness_rating_trial(1, global_imagined_tilt, true),
+  
+
+//keep
    zebra_intro, sandstorm_intro, stripes_intro];
 
 
@@ -1577,8 +1604,8 @@ v 0.7.1:  (3-9-2026 ) FOR lerenkijken.nl
   3. update to preloading images procedure
   4. update vividness rating labels
 
-v 1.0.0:  (3-9-2026 ) FOR lerenkijken.nl 
-  1. update number of presented trials to be 48 (3 practice + 45 experimental). 
+v 0.7.2:  (3-9-2026 ) FOR lerenkijken.nl
+  1. test new half-zoom setting for mobile users
 
 */
 
