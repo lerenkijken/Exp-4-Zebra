@@ -72,11 +72,12 @@
         }
   });
 
-  const testing_mode = true  
+  const testing_mode = false  // make sure testing_mode is set to false for deployment
 
     // add url variables
-  let exp_version = '0_7_22' 
+  let exp_version = '1_0_0' 
   exp_version += testing_mode ? '_TEST': '' 
+  
   const exp_id = 'exp_4_v'+exp_version
   console.log("Exp id: "+exp_id)
     
@@ -1320,10 +1321,10 @@
       func: function(done){
           try { 
             /* To save data we need these things:
-            1. make sure to have JQuery imported by this src="https://code.jquery.com/jquery-4.0.0.min.js" inside head
+            1. make sure to have JQuery imported": add this src="https://code.jquery.com/jquery-4.0.0.min.js" inside head in a script-tag
             2. get URL variables to get correct uid and token
             3. put all url vars as key:value pairs in the first trial object
-            4. t
+            4. copy past this 'save_data' trial object
             */
               window.xhr = $.post('https://www.lerenkijken.nl/api/save', jsPsych.data.get().json()).done(function(){
                   if(xhr.status == 200){
@@ -1460,20 +1461,18 @@ MAKE TIMELINE
 *////////////////////////////////////
 
 
-  const timeline = [user_info_trial, preload, welcome_screen, 
+  const timeline = [user_info_trial, preload, welcome_screen] 
+
+    // START TESTING ZONE
+
+
+
+    //END OF TESTING ZONE
 
 
 
 
-
-// START TESTING ZONE
-
-// END OF TESTING ZONE
-
-
-
-
-   zebra_intro, sandstorm_intro, stripes_intro];
+  timeline.push(zebra_intro, sandstorm_intro, stripes_intro);
 
 
  
@@ -1612,6 +1611,11 @@ v 0.7.1:  (3-9-2026 ) FOR lerenkijken.nl
 v 0.7.2:  (3-9-2026 ) FOR lerenkijken.nl
   1. test new half-zoom setting for mobile users
   2. size tweaks
+
+
+v 1.0.0:
+  1. ready for mobile & desktop launch on lerenkijken.nl  
+
 */
 
 </script>
