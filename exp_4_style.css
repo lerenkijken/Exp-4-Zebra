@@ -182,23 +182,26 @@ transform: translate(-50%, -50%);
 
 p {
   font-family: Inter; /* use font */
-  font-size:larger;
+  font-size: x-large;
        -webkit-user-select: none; /* Safari */
             user-select: none; 
 }
 
 h1 {
   font-family: Inter;
+    font-size: xx-large;
     -webkit-user-select: none; /* Safari */
             user-select: none;
 }
 h2 {
   font-family: Inter;
+    font-size: xx-large;
     -webkit-user-select: none; /* Safari */
             user-select: none; 
 }
 h3 {
   font-family: Inter;
+    font-size: x-large;
     -webkit-user-select: none; /* Safari */
             user-select: none;
 }
