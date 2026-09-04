@@ -182,6 +182,7 @@ transform: translate(-50%, -50%);
 
 p {
   font-family: Inter; /* use font */
+  font-size:larger;
        -webkit-user-select: none; /* Safari */
             user-select: none; 
 }
