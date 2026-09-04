@@ -100,6 +100,56 @@ progress::-webkit-progress-value {
   /* box-shadow: 1px 1px 5px 3px rgba( 255, 0, 0, 0.8 ); */
 }
 
+input[type="radio"] {
+  appearance: none;
+  width: 2.3em;
+  height: 2.3em;
+  border: 3px solid rgba(255, 255, 255, 0.4); /* border color */
+  background-color: rgba(0,0,0, 0.3); /* border color */
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  margin: 0;
+  vertical-align: middle;
+  
+}
+
+input[type="radio"]:checked::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.4em;
+  height: 1.4em;
+  border-radius: 100%;
+  background: #fafaf9; /* checked dot color */
+  transform: translate(-50%, -50%);
+}
+/* input[type="radio"] {
+   appearance: none;
+  height: 10px;
+  width: 10px;
+  border: 30px solid rgb(27, 11, 247) border color 
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  margin: 0;
+}
+input[type="radio"]:checked {
+  content: "";
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fe9900;  checked dot color 
+transform: translate(-50%, -50%); 
+        } 
+        
+      */
+
 @font-face {
   font-family: Malington; /* set name */
   src: url(font_faces/Malinton-Semibold.ttf); /* url of the font */
