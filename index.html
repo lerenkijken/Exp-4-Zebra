@@ -1129,7 +1129,7 @@
 
   const welcome_screen = {
     type: jsPsychHtmlButtonResponse,
-    stimulus: `<h1>Welkom!</h1> `+
+    stimulus: `<h1>Welkom! `+ (testing_mode ? exp_version :"") + '</h1>' +
         `<h2>Leuk dat je mee wilt doen.</h2>`+
       `<h2>De zebra's wachten al op je!</h2>`+
     `<h3>Klik of tik hieronder om te beginnen.</h3>`,
