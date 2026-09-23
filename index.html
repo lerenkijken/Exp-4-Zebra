@@ -75,7 +75,7 @@
   const testing_mode = false  // make sure testing_mode is set to false for deployment
 
     // add url variables
-  let exp_version = '1_0_0' 
+  let exp_version = '1_1_0' 
   exp_version += testing_mode ? '_TEST': '' 
   
   const exp_id = 'exp_4_v'+exp_version
@@ -1313,6 +1313,40 @@
       },
   };
          
+  const save_data_inter_trail = {  // run this in the background so it does not stall trails (no summary info is saved)
+      type: jsPsychCallFunction,
+      func: function(){
+          let save_start_timestamp = performance.now()
+          setTimeout(() =>{
+              // line below is enough for saving, the rest is for testing & debugging
+              // window.xhr = $.post('https://www.lerenkijken.nl/api/save', jsPsych.data.get().json())
+              
+              try {
+                  window.xhr = $.post('https://www.lerenkijken.nl/api/save', jsPsych.data.get().json()).done(function(){
+                      if(xhr.status == 200){
+                          console.log('data saved OK!');
+                          console.log('Save Duration:', performance.now() - save_start_timestamp)
+                      } else{
+                          console.log(xhr.status);
+                          console.log('not saved, xhr.status was not 200');
+                          console.log('Save Duration:', performance.now() - save_start_timestamp)
+                      }
+                  }).fail(function(){
+                      console.log(xhr.status);
+                      console.log('not saved, fail function ran');
+                      console.log('Save Duration:', performance.now() - save_start_timestamp)
+                  });
+              } catch (error){
+                  console.log(error);
+                  console.log('not saved, error caught');
+                  console.log('Save Duration:', performance.now() - save_start_timestamp)
+              }
+
+          }, 0) // final line of setTimeout, have it begin immideatly 
+      },
+
+  }
+
 
 
   const save_data = {
@@ -1430,6 +1464,8 @@
         }
       },
 
+      save_data_inter_trail,
+
     ],
 
     loop_function: function() {
@@ -1508,6 +1544,7 @@ MAKE TIMELINE
   }
 
   timeline.push(awareness_check);
+  timeline.push(save_data_inter_trail);
 
   timeline.push(intro_part_2, example_left_screen, example_right_screen, example_absent_screen, response_instruction);
 
@@ -1616,6 +1653,8 @@ v 0.7.2:  (3-9-2026 ) FOR lerenkijken.nl
 v 1.0.0:
   1. ready for mobile & desktop launch on lerenkijken.nl  
 
+v 1.1.0:
+  1. save data after frist trial 
 */
 
 </script>
